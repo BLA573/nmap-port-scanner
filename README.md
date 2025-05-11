@@ -23,6 +23,22 @@ A simple and safe command-line port scanner written in Python using the `nmap` m
 - Nmap installed on your system
 - Python library: `python-nmap`
 
+## Disclaimer
+
+This project is intended for **educational purposes only**.
+
+By using this tool, you agree to the following:
+
+- You are solely responsible for how you use this script.
+- You will not use it to scan or probe any network, device, or system without **explicit permission**.
+- The author is **not liable** for any misuse, damage, legal consequences, or ethical violations resulting from the use of this software.
+
+Port scanning can be flagged as malicious activity. **Unauthorized use is illegal** in many countries and can result in **criminal charges**.
+
+Use it responsibly. Use it legally.
+
+---
+
 ### 🧪 Install
 
 ```bash
