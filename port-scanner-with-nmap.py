@@ -1,35 +1,44 @@
 import nmap
 
-ip = input("Enter the IP address to scan: ")
-begin = input("Enter the starting port: ")
-end = input("Enter the ending port: ")
+def is_valid_ip(ip):
+    parts = ip.split(".")
+    return (
+        len(parts) == 4 and
+        all(p.isdigit() and 0 <= int(p) <= 255 for p in parts)
+    )
 
-
-try:
-    begin = int(begin)
-    end = int(end)
-    if begin > end:
-        print("Starting port must be less than ending port.")
-        exit()
-    if begin < 0 or end > 65535:
-        print("Port numbers must be between 0 and 65535.")
-        exit()
-    if not ip or len(ip.split('.')) != 4 or not all(part.isdigit() and 0 <= int(part) <= 255 for part in ip.split('.')):
+def get_input():
+    ip = input("Enter the IP address to scan: ").strip()
+    if not ip or not is_valid_ip(ip):
         print("Invalid IP address format.")
         exit()
-except ValueError:
-    print("Port values must be integers.")
-    exit()
 
-
-scanner = nmap.PortScanner()
-
-for port in range(begin, end + 1):
     try:
-        res = scanner.scan(ip, str(port))
-        state = res['scan'][ip]['tcp'][port]['state']
-        print(f"Port {port}: {state}")
-    except KeyError:
-        print(f"Port {port}: No response (possibly closed or filtered)")
-    except Exception as e:
-        print(f"Error scanning port {port}: {e}")
+        begin = int(input("Enter the starting port: "))
+        end = int(input("Enter the ending port: "))
+    except ValueError:
+        print("Port values must be integers.")
+        exit()
+
+    if begin < 0 or end > 65535 or begin > end:
+        print("Port range must be 0–65535 and starting port must be <= ending port.")
+        exit()
+
+    return ip, begin, end
+
+def scan_ports(ip, start, end):
+    scanner = nmap.PortScanner()
+
+    for port in range(start, end + 1):
+        try:
+            result = scanner.scan(ip, str(port))
+            state = result['scan'][ip]['tcp'][port]['state']
+            print(f"Port {port}: {state}")
+        except KeyError:
+            print(f"Port {port}: No response (likely closed or filtered)")
+        except Exception as e:
+            print(f"Error scanning port {port}: {e}")
+
+if __name__ == "__main__":
+    ip, begin, end = get_input()
+    scan_ports(ip, begin, end)
